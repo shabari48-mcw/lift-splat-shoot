@@ -1,0 +1,494 @@
+/media/ava/Data_CI/workspace/shabari/miniconda3/envs/lss/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/media/ava/Data_CI/workspace/shabari/miniconda3/envs/lss/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+NuscData: 323 samples. Split: train.
+                   Augmentation Conf: {'resize_lim': (0.193, 0.225), 'final_dim': (128, 352), 'rot_lim': (-5.4, 5.4), 'H': 900, 'W': 1600, 'rand_flip': True, 'bot_pct_lim': (0.0, 0.22), 'cams': ['CAM_FRONT_LEFT', 'CAM_FRONT', 'CAM_FRONT_RIGHT', 'CAM_BACK_LEFT', 'CAM_BACK', 'CAM_BACK_RIGHT'], 'Ncams': 5}
+NuscData: 81 samples. Split: val.
+                   Augmentation Conf: {'resize_lim': (0.193, 0.225), 'final_dim': (128, 352), 'rot_lim': (-5.4, 5.4), 'H': 900, 'W': 1600, 'rand_flip': True, 'bot_pct_lim': (0.0, 0.22), 'cams': ['CAM_FRONT_LEFT', 'CAM_FRONT', 'CAM_FRONT_RIGHT', 'CAM_BACK_LEFT', 'CAM_BACK', 'CAM_BACK_RIGHT'], 'Ncams': 5}
+Loaded pretrained weights for efficientnet-b0
+loading model.pt
+running eval...
+  0%|          | 0/81 [00:00<?, ?it/s]/media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:118: TracerWarning: Converting a tensor to a Python boolean might cause the trace to be incorrect. We can't record the data flow of Python values, so this value will be treated as a constant in the future. This means that the trace might not generalize to other inputs!
+  if prev_x.size(2) > x.size(2):
+torch.Size([1, 1, 200, 200])
+Tracing Model
+graph(%self.1 : __torch__.src.models.LiftSplatShoot,
+      %x.1 : Float(1, 6, 3, 128, 352, strides=[811008, 135168, 45056, 352, 1], requires_grad=0, device=cpu),
+      %rots : Float(1, 6, 3, 3, strides=[54, 9, 3, 1], requires_grad=0, device=cpu),
+      %trans : Float(1, 6, 3, strides=[18, 3, 1], requires_grad=0, device=cpu),
+      %intrins : Float(1, 6, 3, 3, strides=[54, 9, 3, 1], requires_grad=0, device=cpu),
+      %post_rots : Float(1, 6, 3, 3, strides=[54, 9, 3, 1], requires_grad=0, device=cpu),
+      %post_trans : Float(1, 6, 3, strides=[18, 3, 1], requires_grad=0, device=cpu)):
+  %bevencode : __torch__.src.models.BevEncode = prim::GetAttr[name="bevencode"](%self.1)
+  %nx : Tensor = prim::GetAttr[name="nx"](%self.1)
+  %bx : Tensor = prim::GetAttr[name="bx"](%self.1)
+  %dx : Tensor = prim::GetAttr[name="dx"](%self.1)
+  %camencode : __torch__.src.models.CamEncode = prim::GetAttr[name="camencode"](%self.1)
+  %frustum : Tensor = prim::GetAttr[name="frustum"](%self.1)
+  %1472 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:214:0
+  %1473 : int = aten::size(%trans, %1472) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:214:0
+  %B.1 : Long(device=cpu) = prim::NumToTensor(%1473)
+  %1612 : int = aten::Int(%B.1)
+  %1600 : int = aten::Int(%B.1)
+  %1492 : int = aten::Int(%B.1)
+  %1481 : int = aten::Int(%B.1)
+  %1475 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:214:0
+  %1476 : int = aten::size(%trans, %1475) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:214:0
+  %N.1 : Long(device=cpu) = prim::NumToTensor(%1476)
+  %1613 : int = aten::Int(%N.1)
+  %1601 : int = aten::Int(%N.1)
+  %1493 : int = aten::Int(%N.1)
+  %1482 : int = aten::Int(%N.1)
+  %1483 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:218:0
+  %1484 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:218:0
+  %1485 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:218:0
+  %1486 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:218:0
+  %1487 : int[] = prim::ListConstruct(%1481, %1482, %1483, %1484, %1485, %1486)
+  %1488 : Float(1, 6, 1, 1, 1, 3, strides=[18, 3, 3, 3, 3, 1], requires_grad=0, device=cpu) = aten::view(%post_trans, %1487) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:218:0
+  %1489 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:218:0
+  %points.1 : Float(1, 6, 41, 8, 22, 3, strides=[129888, 21648, 528, 66, 3, 1], requires_grad=0, device=cpu) = aten::sub(%frustum, %1488, %1489) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:218:0
+  %6647 : Float(1, 6, 3, 3, strides=[54, 9, 1, 3], requires_grad=0, device=cpu) = aten::linalg_inv(%post_rots) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:219:0
+  %1494 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:219:0
+  %1495 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:219:0
+  %1496 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:219:0
+  %1497 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:219:0
+  %1498 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:219:0
+  %1499 : int[] = prim::ListConstruct(%1492, %1493, %1494, %1495, %1496, %1497, %1498)
+  %1500 : Float(1, 6, 1, 1, 1, 3, 3, strides=[54, 9, 3, 3, 3, 1, 3], requires_grad=0, device=cpu) = aten::view(%6647, %1499) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:219:0
+  %1501 : int = prim::Constant[value=-1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:219:0
+  %1502 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::unsqueeze(%points.1, %1501) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:219:0
+  %points.3 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::matmul(%1500, %1502) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:219:0
+  %1504 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1505 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1506 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1507 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1508 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%points.3, %1504, %1505, %1506, %1507) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1509 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1510 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1511 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1512 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1513 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1508, %1509, %1510, %1511, %1512) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1514 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1515 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1516 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1517 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1518 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1513, %1514, %1515, %1516, %1517) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1519 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1520 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1521 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1522 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1523 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1518, %1519, %1520, %1521, %1522) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1524 : int = prim::Constant[value=4]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1525 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1526 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1527 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1528 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1523, %1524, %1525, %1526, %1527) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1529 : int = prim::Constant[value=5]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1530 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1531 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1532 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1533 : Float(1, 6, 41, 8, 22, 2, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1528, %1529, %1530, %1531, %1532) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1534 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1535 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1536 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1537 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1538 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%points.3, %1534, %1535, %1536, %1537) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1539 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1540 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1541 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1542 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1543 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1538, %1539, %1540, %1541, %1542) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1544 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1545 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1546 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1547 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1548 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1543, %1544, %1545, %1546, %1547) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1549 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1550 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1551 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1552 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1553 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1548, %1549, %1550, %1551, %1552) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1554 : int = prim::Constant[value=4]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1555 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1556 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1557 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1558 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1553, %1554, %1555, %1556, %1557) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1559 : int = prim::Constant[value=5]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1560 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1561 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1562 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1563 : Float(1, 6, 41, 8, 22, 1, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1558, %1559, %1560, %1561, %1562) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1564 : Float(1, 6, 41, 8, 22, 2, 1, strides=[86592, 14432, 352, 44, 2, 1, 1], requires_grad=0, device=cpu) = aten::mul(%1533, %1563) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %1565 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1566 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1567 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1568 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1569 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%points.3, %1565, %1566, %1567, %1568) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1570 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1571 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1572 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1573 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1574 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1569, %1570, %1571, %1572, %1573) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1575 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1576 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1577 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1578 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1579 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1574, %1575, %1576, %1577, %1578) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1580 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1581 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1582 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1583 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1584 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1579, %1580, %1581, %1582, %1583) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1585 : int = prim::Constant[value=4]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1586 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1587 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1588 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1589 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1584, %1585, %1586, %1587, %1588) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1590 : int = prim::Constant[value=5]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1591 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1592 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1593 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1594 : Float(1, 6, 41, 8, 22, 1, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::slice(%1589, %1590, %1591, %1592, %1593) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:223:0
+  %1595 : Tensor[] = prim::ListConstruct(%1564, %1594)
+  %1596 : int = prim::Constant[value=5]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %points.5 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::cat(%1595, %1596) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:222:0
+  %6648 : Float(1, 6, 3, 3, strides=[54, 9, 1, 3], requires_grad=0, device=cpu) = aten::linalg_inv(%intrins) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:225:0
+  %combine : Float(1, 6, 3, 3, strides=[54, 9, 3, 1], requires_grad=0, device=cpu) = aten::matmul(%rots, %6648) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:225:0
+  %1602 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:226:0
+  %1603 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:226:0
+  %1604 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:226:0
+  %1605 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:226:0
+  %1606 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:226:0
+  %1607 : int[] = prim::ListConstruct(%1600, %1601, %1602, %1603, %1604, %1605, %1606)
+  %1608 : Float(1, 6, 1, 1, 1, 3, 3, strides=[54, 9, 9, 9, 9, 3, 1], requires_grad=0, device=cpu) = aten::view(%combine, %1607) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:226:0
+  %1609 : Float(1, 6, 41, 8, 22, 3, 1, strides=[129888, 21648, 528, 66, 3, 1, 1], requires_grad=0, device=cpu) = aten::matmul(%1608, %points.5) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:226:0
+  %1610 : int = prim::Constant[value=-1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:226:0
+  %points : Float(1, 6, 41, 8, 22, 3, strides=[129888, 21648, 528, 66, 3, 1], requires_grad=0, device=cpu) = aten::squeeze(%1609, %1610) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:226:0
+  %1614 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:227:0
+  %1615 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:227:0
+  %1616 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:227:0
+  %1617 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:227:0
+  %1618 : int[] = prim::ListConstruct(%1612, %1613, %1614, %1615, %1616, %1617)
+  %1619 : Float(1, 6, 1, 1, 1, 3, strides=[18, 3, 3, 3, 3, 1], requires_grad=0, device=cpu) = aten::view(%trans, %1618) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:227:0
+  %1620 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:227:0
+  %geom_feats.1 : Float(1, 6, 41, 8, 22, 3, strides=[129888, 21648, 528, 66, 3, 1], requires_grad=0, device=cpu) = aten::add_(%points, %1619, %1620) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:227:0
+  %1622 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:234:0
+  %1623 : int = aten::size(%x.1, %1622) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:234:0
+  %B.3 : Long(device=cpu) = prim::NumToTensor(%1623)
+  %4262 : int = aten::Int(%B.3)
+  %1625 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:234:0
+  %1626 : int = aten::size(%x.1, %1625) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:234:0
+  %N.3 : Long(device=cpu) = prim::NumToTensor(%1626)
+  %4263 : int = aten::Int(%N.3)
+  %1628 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:234:0
+  %1629 : int = aten::size(%x.1, %1628) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:234:0
+  %C.1 : Long(device=cpu) = prim::NumToTensor(%1629)
+  %1639 : int = aten::Int(%C.1)
+  %1631 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:234:0
+  %1632 : int = aten::size(%x.1, %1631) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:234:0
+  %imH : Long(device=cpu) = prim::NumToTensor(%1632)
+  %1640 : int = aten::Int(%imH)
+  %1634 : int = prim::Constant[value=4]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:234:0
+  %1635 : int = aten::size(%x.1, %1634) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:234:0
+  %imW : Long(device=cpu) = prim::NumToTensor(%1635)
+  %1641 : int = aten::Int(%imW)
+  %1637 : Long(requires_grad=0, device=cpu) = aten::mul(%B.3, %N.3) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:236:0
+  %1638 : int = aten::Int(%1637)
+  %1642 : int[] = prim::ListConstruct(%1638, %1639, %1640, %1641)
+  %input.1 : Float(6, 3, 128, 352, strides=[135168, 45056, 352, 1], requires_grad=0, device=cpu) = aten::view(%x.1, %1642) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:236:0
+  %6645 : Tensor = prim::CallMethod[name="forward"](%camencode, %input.1)
+  %4258 : Long(requires_grad=0, device=cpu) = prim::Constant[value={16}]() # /media/ava/Data_CI/workspace/shabari/miniconda3/envs/lss/lib/python3.10/site-packages/torch/_tensor.py:1106:0
+  %4259 : Long(requires_grad=0, device=cpu) = aten::floor_divide(%imH, %4258) # /media/ava/Data_CI/workspace/shabari/miniconda3/envs/lss/lib/python3.10/site-packages/torch/_tensor.py:1106:0
+  %4264 : int = aten::Int(%4259)
+  %4260 : Long(requires_grad=0, device=cpu) = prim::Constant[value={16}]() # /media/ava/Data_CI/workspace/shabari/miniconda3/envs/lss/lib/python3.10/site-packages/torch/_tensor.py:1106:0
+  %4261 : Long(requires_grad=0, device=cpu) = aten::floor_divide(%imW, %4260) # /media/ava/Data_CI/workspace/shabari/miniconda3/envs/lss/lib/python3.10/site-packages/torch/_tensor.py:1106:0
+  %4265 : int = aten::Int(%4261)
+  %4266 : int = prim::Constant[value=64]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:238:0
+  %4267 : int = prim::Constant[value=41]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:238:0
+  %4268 : int[] = prim::ListConstruct(%4262, %4263, %4266, %4267, %4264, %4265)
+  %x.189 : Float(1, 6, 64, 41, 8, 22, strides=[2770944, 461824, 7216, 176, 22, 1], requires_grad=0, device=cpu) = aten::view(%6645, %4268) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:238:0
+  %4270 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:239:0
+  %4271 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:239:0
+  %4272 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:239:0
+  %4273 : int = prim::Constant[value=4]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:239:0
+  %4274 : int = prim::Constant[value=5]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:239:0
+  %4275 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:239:0
+  %4276 : int[] = prim::ListConstruct(%4270, %4271, %4272, %4273, %4274, %4275)
+  %x.191 : Float(1, 6, 41, 8, 22, 64, strides=[2770944, 461824, 176, 22, 1, 7216], requires_grad=0, device=cpu) = aten::permute(%x.189, %4276) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:239:0
+  %4278 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %4279 : int = aten::size(%x.191, %4278) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %B : Long(device=cpu) = prim::NumToTensor(%4279)
+  %4543 : int = aten::Int(%B)
+  %4281 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %4282 : int = aten::size(%x.191, %4281) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %N : Long(device=cpu) = prim::NumToTensor(%4282)
+  %4284 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %4285 : int = aten::size(%x.191, %4284) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %D : Long(device=cpu) = prim::NumToTensor(%4285)
+  %4287 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %4288 : int = aten::size(%x.191, %4287) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %H : Long(device=cpu) = prim::NumToTensor(%4288)
+  %4290 : int = prim::Constant[value=4]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %4291 : int = aten::size(%x.191, %4290) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %W : Long(device=cpu) = prim::NumToTensor(%4291)
+  %4293 : int = prim::Constant[value=5]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %4294 : int = aten::size(%x.191, %4293) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:244:0
+  %C : Long(device=cpu) = prim::NumToTensor(%4294)
+  %4544 : int = aten::Int(%C)
+  %4301 : int = aten::Int(%C)
+  %4296 : Long(requires_grad=0, device=cpu) = aten::mul(%B, %N) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:245:0
+  %4297 : Long(requires_grad=0, device=cpu) = aten::mul(%4296, %D) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:245:0
+  %4298 : Long(requires_grad=0, device=cpu) = aten::mul(%4297, %H) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:245:0
+  %Nprime : Long(requires_grad=0, device=cpu) = aten::mul(%4298, %W) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:245:0
+  %4316 : int = aten::Int(%Nprime)
+  %4300 : int = aten::Int(%Nprime)
+  %4302 : int[] = prim::ListConstruct(%4300, %4301)
+  %x.193 : Float(43296, 64, strides=[64, 1], requires_grad=0, device=cpu) = aten::reshape(%x.191, %4302) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:248:0
+  %4304 : Double(requires_grad=0, device=cpu) = prim::Constant[value={2}]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:251:0
+  %4305 : Float(3, strides=[1], requires_grad=0, device=cpu) = aten::div(%dx, %4304) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:251:0
+  %4306 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:251:0
+  %4307 : Float(3, strides=[1], requires_grad=0, device=cpu) = aten::sub(%bx, %4305, %4306) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:251:0
+  %4308 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:251:0
+  %4309 : Float(1, 6, 41, 8, 22, 3, strides=[129888, 21648, 528, 66, 3, 1], requires_grad=0, device=cpu) = aten::sub(%geom_feats.1, %4307, %4308) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:251:0
+  %4310 : Float(1, 6, 41, 8, 22, 3, strides=[129888, 21648, 528, 66, 3, 1], requires_grad=0, device=cpu) = aten::div(%4309, %dx) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:251:0
+  %4311 : int = prim::Constant[value=4]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:251:0
+  %4312 : bool = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:251:0
+  %4313 : bool = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:251:0
+  %4314 : NoneType = prim::Constant()
+  %geom_feats.3 : Long(1, 6, 41, 8, 22, 3, strides=[129888, 21648, 528, 66, 3, 1], requires_grad=0, device=cpu) = aten::to(%4310, %4311, %4312, %4313, %4314) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:251:0
+  %4317 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:252:0
+  %4318 : int[] = prim::ListConstruct(%4316, %4317)
+  %geom_feats.5 : Long(43296, 3, strides=[3, 1], requires_grad=0, device=cpu) = aten::view(%geom_feats.3, %4318) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:252:0
+  %4320 : Long(requires_grad=0, device=cpu) = aten::floor_divide(%Nprime, %B) # /media/ava/Data_CI/workspace/shabari/miniconda3/envs/lss/lib/python3.10/site-packages/torch/_tensor.py:1106:0
+  %4321 : int = aten::Int(%4320)
+  %4322 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:253:0
+  %4323 : int[] = prim::ListConstruct(%4321, %4322)
+  %4324 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:253:0
+  %4325 : int = prim::Constant[value=4]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:253:0
+  %4326 : NoneType = prim::Constant()
+  %4327 : Device = prim::Constant[value="cpu"]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:253:0
+  %4328 : bool = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:253:0
+  %4329 : Long(43296, 1, strides=[1, 1], requires_grad=0, device=cpu) = aten::full(%4323, %4324, %4325, %4326, %4327, %4328) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:253:0
+  %4330 : Tensor[] = prim::ListConstruct(%4329)
+  %4331 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:253:0
+  %batch_ix : Long(43296, 1, strides=[1, 1], requires_grad=0, device=cpu) = aten::cat(%4330, %4331) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:253:0
+  %4333 : Tensor[] = prim::ListConstruct(%geom_feats.5, %batch_ix)
+  %4334 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:255:0
+  %geom_feats.7 : Long(43296, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::cat(%4333, %4334) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:255:0
+  %4336 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4337 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4338 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4339 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4340 : Long(43296, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats.7, %4336, %4337, %4338, %4339) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4341 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4342 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4343 : Long(43296, strides=[4], requires_grad=0, device=cpu) = aten::select(%4340, %4341, %4342) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4344 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4345 : Bool(43296, strides=[1], requires_grad=0, device=cpu) = aten::ge(%4343, %4344) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4346 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4347 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4348 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4349 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4350 : Long(43296, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats.7, %4346, %4347, %4348, %4349) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4351 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4352 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4353 : Long(43296, strides=[4], requires_grad=0, device=cpu) = aten::select(%4350, %4351, %4352) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4354 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4355 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4356 : Long(requires_grad=0, device=cpu) = aten::select(%nx, %4354, %4355) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4357 : Bool(43296, strides=[1], requires_grad=0, device=cpu) = aten::lt(%4353, %4356) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4358 : Bool(43296, strides=[1], requires_grad=0, device=cpu) = aten::__and__(%4345, %4357) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4359 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4360 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4361 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4362 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4363 : Long(43296, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats.7, %4359, %4360, %4361, %4362) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4364 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4365 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4366 : Long(43296, strides=[4], requires_grad=0, device=cpu) = aten::select(%4363, %4364, %4365) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4367 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4368 : Bool(43296, strides=[1], requires_grad=0, device=cpu) = aten::ge(%4366, %4367) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4369 : Bool(43296, strides=[1], requires_grad=0, device=cpu) = aten::__and__(%4358, %4368) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4370 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4371 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4372 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4373 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4374 : Long(43296, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats.7, %4370, %4371, %4372, %4373) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4375 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4376 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4377 : Long(43296, strides=[4], requires_grad=0, device=cpu) = aten::select(%4374, %4375, %4376) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4378 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4379 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4380 : Long(requires_grad=0, device=cpu) = aten::select(%nx, %4378, %4379) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4381 : Bool(43296, strides=[1], requires_grad=0, device=cpu) = aten::lt(%4377, %4380) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:259:0
+  %4382 : Bool(43296, strides=[1], requires_grad=0, device=cpu) = aten::__and__(%4369, %4381) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4383 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4384 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4385 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4386 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4387 : Long(43296, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats.7, %4383, %4384, %4385, %4386) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4388 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4389 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4390 : Long(43296, strides=[4], requires_grad=0, device=cpu) = aten::select(%4387, %4388, %4389) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4391 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4392 : Bool(43296, strides=[1], requires_grad=0, device=cpu) = aten::ge(%4390, %4391) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4393 : Bool(43296, strides=[1], requires_grad=0, device=cpu) = aten::__and__(%4382, %4392) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4394 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4395 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4396 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4397 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4398 : Long(43296, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats.7, %4394, %4395, %4396, %4397) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4399 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4400 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4401 : Long(43296, strides=[4], requires_grad=0, device=cpu) = aten::select(%4398, %4399, %4400) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4402 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4403 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4404 : Long(requires_grad=0, device=cpu) = aten::select(%nx, %4402, %4403) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %4405 : Bool(43296, strides=[1], requires_grad=0, device=cpu) = aten::lt(%4401, %4404) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:260:0
+  %kept.1 : Bool(43296, strides=[1], requires_grad=0, device=cpu) = aten::__and__(%4393, %4405) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:258:0
+  %4407 : Tensor?[] = prim::ListConstruct(%kept.1)
+  %x.195 : Float(42162, 64, strides=[64, 1], requires_grad=0, device=cpu) = aten::index(%x.193, %4407) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:261:0
+  %4409 : Tensor?[] = prim::ListConstruct(%kept.1)
+  %geom_feats.9 : Long(42162, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::index(%geom_feats.7, %4409) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:262:0
+  %4411 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4412 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4413 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4414 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4415 : Long(42162, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats.9, %4411, %4412, %4413, %4414) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4416 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4417 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4418 : Long(42162, strides=[4], requires_grad=0, device=cpu) = aten::select(%4415, %4416, %4417) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4419 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4420 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4421 : Long(requires_grad=0, device=cpu) = aten::select(%nx, %4419, %4420) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4422 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4423 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4424 : Long(requires_grad=0, device=cpu) = aten::select(%nx, %4422, %4423) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4425 : Long(requires_grad=0, device=cpu) = aten::mul(%4421, %4424) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4426 : Long(requires_grad=0, device=cpu) = aten::mul(%4425, %B) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4427 : Long(42162, strides=[1], requires_grad=0, device=cpu) = aten::mul(%4418, %4426) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4428 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4429 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4430 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4431 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4432 : Long(42162, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats.9, %4428, %4429, %4430, %4431) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4433 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4434 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4435 : Long(42162, strides=[4], requires_grad=0, device=cpu) = aten::select(%4432, %4433, %4434) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4436 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4437 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4438 : Long(requires_grad=0, device=cpu) = aten::select(%nx, %4436, %4437) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4439 : Long(requires_grad=0, device=cpu) = aten::mul(%4438, %B) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4440 : Long(42162, strides=[1], requires_grad=0, device=cpu) = aten::mul(%4435, %4439) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:266:0
+  %4441 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4442 : Long(42162, strides=[1], requires_grad=0, device=cpu) = aten::add(%4427, %4440, %4441) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4443 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:267:0
+  %4444 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:267:0
+  %4445 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:267:0
+  %4446 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:267:0
+  %4447 : Long(42162, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats.9, %4443, %4444, %4445, %4446) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:267:0
+  %4448 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:267:0
+  %4449 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:267:0
+  %4450 : Long(42162, strides=[4], requires_grad=0, device=cpu) = aten::select(%4447, %4448, %4449) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:267:0
+  %4451 : Long(42162, strides=[1], requires_grad=0, device=cpu) = aten::mul(%4450, %B) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:267:0
+  %4452 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4453 : Long(42162, strides=[1], requires_grad=0, device=cpu) = aten::add(%4442, %4451, %4452) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4454 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:268:0
+  %4455 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:268:0
+  %4456 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:268:0
+  %4457 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:268:0
+  %4458 : Long(42162, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats.9, %4454, %4455, %4456, %4457) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:268:0
+  %4459 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:268:0
+  %4460 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:268:0
+  %4461 : Long(42162, strides=[4], requires_grad=0, device=cpu) = aten::select(%4458, %4459, %4460) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:268:0
+  %4462 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %ranks.1 : Long(42162, strides=[1], requires_grad=0, device=cpu) = aten::add(%4453, %4461, %4462) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:265:0
+  %4464 : int = prim::Constant[value=-1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:269:0
+  %4465 : bool = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:269:0
+  %sorts : Long(42162, strides=[1], requires_grad=0, device=cpu) = aten::argsort(%ranks.1, %4464, %4465) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:269:0
+  %4467 : Tensor?[] = prim::ListConstruct(%sorts)
+  %x.197 : Float(42162, 64, strides=[64, 1], requires_grad=0, device=cpu) = aten::index(%x.195, %4467) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:270:0
+  %4469 : Tensor?[] = prim::ListConstruct(%sorts)
+  %geom_feats.11 : Long(42162, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::index(%geom_feats.9, %4469) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:270:0
+  %4471 : Tensor?[] = prim::ListConstruct(%sorts)
+  %ranks : Long(42162, strides=[1], requires_grad=0, device=cpu) = aten::index(%ranks.1, %4471) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:270:0
+  %4531 : (Float(7268, 64, strides=[64, 1], requires_grad=0, device=cpu), Long(7268, 4, strides=[4, 1], requires_grad=0, device=cpu)) = ^QuickCumsum[inplace=0, module="src.tools", Subgraph=<Graph>]()(%x.197, %geom_feats.11, %ranks) # /media/ava/Data_CI/workspace/shabari/miniconda3/envs/lss/lib/python3.10/site-packages/torch/autograd/function.py:575:0
+  %x : Float(7268, 64, strides=[64, 1], requires_grad=0, device=cpu), %geom_feats : Long(7268, 4, strides=[4, 1], requires_grad=0, device=cpu) = prim::TupleUnpack(%4531)
+  %4534 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %4535 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %4536 : Long(requires_grad=0, device=cpu) = aten::select(%nx, %4534, %4535) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %4545 : int = aten::Int(%4536)
+  %4537 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %4538 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %4539 : Long(requires_grad=0, device=cpu) = aten::select(%nx, %4537, %4538) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %4546 : int = aten::Int(%4539)
+  %4540 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %4541 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %4542 : Long(requires_grad=0, device=cpu) = aten::select(%nx, %4540, %4541) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %4547 : int = aten::Int(%4542)
+  %4548 : int[] = prim::ListConstruct(%4543, %4544, %4545, %4546, %4547)
+  %4549 : NoneType = prim::Constant()
+  %4550 : NoneType = prim::Constant()
+  %4551 : Device = prim::Constant[value="cpu"]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %4552 : bool = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %final : Float(1, 64, 1, 200, 200, strides=[2560000, 40000, 40000, 200, 1], requires_grad=0, device=cpu) = aten::zeros(%4548, %4549, %4550, %4551, %4552) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:279:0
+  %4554 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4555 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4556 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4557 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4558 : Long(7268, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats, %4554, %4555, %4556, %4557) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4559 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4560 : int = prim::Constant[value=3]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4561 : Long(7268, strides=[4], requires_grad=0, device=cpu) = aten::select(%4558, %4559, %4560) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4562 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4563 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4564 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4565 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4566 : Long(7268, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats, %4562, %4563, %4564, %4565) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4567 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4568 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4569 : Long(7268, strides=[4], requires_grad=0, device=cpu) = aten::select(%4566, %4567, %4568) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4570 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4571 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4572 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4573 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4574 : Long(7268, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats, %4570, %4571, %4572, %4573) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4575 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4576 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4577 : Long(7268, strides=[4], requires_grad=0, device=cpu) = aten::select(%4574, %4575, %4576) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4578 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4579 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4580 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4581 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4582 : Long(7268, 4, strides=[4, 1], requires_grad=0, device=cpu) = aten::slice(%geom_feats, %4578, %4579, %4580, %4581) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4583 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4584 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4585 : Long(7268, strides=[4], requires_grad=0, device=cpu) = aten::select(%4582, %4583, %4584) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4586 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4587 : int = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4588 : int = prim::Constant[value=9223372036854775807]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4589 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4590 : Float(1, 64, 1, 200, 200, strides=[2560000, 40000, 40000, 200, 1], requires_grad=0, device=cpu) = aten::slice(%final, %4586, %4587, %4588, %4589) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4591 : NoneType = prim::Constant()
+  %4592 : Tensor?[] = prim::ListConstruct(%4561, %4591, %4569, %4577, %4585)
+  %4593 : bool = prim::Constant[value=0]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4594 : Float(1, 64, 1, 200, 200, strides=[2560000, 40000, 40000, 200, 1], requires_grad=0, device=cpu) = aten::index_put_(%4590, %4592, %x, %4593) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:280:0
+  %4595 : int = prim::Constant[value=2]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:283:0
+  %4596 : Tensor[] = aten::unbind(%final, %4595) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:283:0
+  %4597 : Float(1, 64, 200, 200, strides=[2560000, 40000, 200, 1], requires_grad=0, device=cpu) = prim::ListUnpack(%4596)
+  %4598 : Tensor[] = prim::ListConstruct(%4597)
+  %4599 : int = prim::Constant[value=1]() # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:283:0
+  %input.177 : Float(1, 64, 200, 200, strides=[2560000, 40000, 200, 1], requires_grad=0, device=cpu) = aten::cat(%4598, %4599) # /media/ava/Data_CI/workspace/shabari/lss_model/lift-splat-shoot/src/models.py:283:0
+  %6646 : Tensor = prim::CallMethod[name="forward"](%bevencode, %input.177)
+  return (%6646)
+  0%|          | 0/81 [00:26<?, ?it/s]
+
+
+Running inference with traced model...
+
+Model Output:
+
+Output Shape: 1
+
+Output Data Type: torch.float32
