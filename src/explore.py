@@ -208,7 +208,7 @@ def eval_model_iou(version,
                 zbound=[-10.0, 10.0, 20.0],
                 dbound=[4.0, 45.0, 1.0],
 
-                bsz=4,
+                bsz=1,
                 nworkers=10,
                 ):
     grid_conf = {

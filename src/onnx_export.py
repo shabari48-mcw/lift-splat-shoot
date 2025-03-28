@@ -14,6 +14,8 @@ import matplotlib.patches as mpatches
 import numpy as np 
 import onnx
 from tqdm import tqdm
+import torch.nn.functional as F
+from torchinfo import summary
 
 from .data import compile_data
 from .tools import SimpleLoss,get_batch_iou
@@ -29,39 +31,59 @@ def get_val_info(model, valloader, loss_fn, device, use_tqdm=True):
     with torch.no_grad():
         for batch in loader:
             allimgs, rots, trans, intrins, post_rots, post_trans, binimgs = batch
+            print([x.shape for x in batch])
             
             preds = model(allimgs.to(device), rots.to(device),
                           trans.to(device), intrins.to(device), post_rots.to(device),
                           post_trans.to(device))
             
             print(f"Pytorch Prediction Shape {preds.shape}") #torch.Size([4, 1, 200, 200])
-            # exit()
             
-            onnx_filename= "lss-voxelpooling.onnx"
+            
+            onnx_filename= "lss.onnx"
             
             dummy_input=(allimgs.cpu(),rots.cpu(),trans.cpu(),intrins.cpu(),post_rots.cpu(),post_trans.cpu())            
 
-            
-            # print("Converting model to ONNX...")
-            # with torch.no_grad():
-            #     torch.onnx.export(
-            #             model.cpu(),  
-            #             dummy_input,  
-            #             onnx_filename,  
-            #             opset_version=20,
-            #             input_names=["allimgs","rots","trans","intrins","post_rots","post_trans"],  
-            #             output_names=['output'],
-            #             verbose=True
-            #     )
+            # export=True
+            export=False
 
-            # print("Model successfully converted to ONNX and saved as", onnx_filename)
-            ort_session = ort.InferenceSession("lss-voxelpooling.onnx")
-
-            input_tensors = [allimgs.cpu(),rots.cpu(),trans.cpu(),intrins.cpu(),post_rots.cpu(),post_trans.cpu()]
-            inputs =dict(zip([x.name for x in ort_session.get_inputs()], input_tensors))
-
-            output_tensors = ort_session.run(None,inputs)
+            if export:
+                print("Converting model to ONNX...")
+                with torch.no_grad():
+                    torch.onnx.export(
+                            model.cpu(),  
+                            dummy_input,  
+                            onnx_filename,  
+                            opset_version=20,
+                            input_names=["allimgs","rots","trans","intrins","post_rots","post_trans"],  
+                            output_names=['output'],
+                            verbose=True
+                    )
+                print("Model successfully converted to ONNX and saved as", onnx_filename)
                 
+                model=onnx.load(onnx_filename)
+                inferred_model = onnx.shape_inference.infer_shapes(model)
+                onnx.save(inferred_model, "inferred_model.onnx")
+                
+                print("Model successfully converted to ONNX  and shape inferred")
+            else:
+                print("ONNX Inference")
+               
+                ort_session = ort.InferenceSession("inferred_model.onnx")
+                input_tensors = [allimgs.cpu().numpy(),rots.cpu().numpy(),trans.cpu().numpy(),intrins.cpu().numpy(),post_rots.cpu().numpy(),post_trans.cpu().numpy()]
+                print([x.shape for x in input_tensors])
+                inputs =dict(zip([x.name for x in ort_session.get_inputs()], input_tensors))
+                output_tensors = ort_session.run(None,inputs)
+                print(np.array(output_tensors).shape)
+                
+           
+            
+            t1= preds.cpu()
+            t2=torch.from_numpy(np.array(output_tensors)).cpu()
+
+            mse = F.mse_loss(t1, t2)
+            print(mse.item())
+                    
             exit()
             
             binimgs = binimgs.to(device)
@@ -116,13 +138,13 @@ def eval_model_iou(version,
                     'bot_pct_lim': bot_pct_lim,
                     'cams': ['CAM_FRONT_LEFT', 'CAM_FRONT', 'CAM_FRONT_RIGHT',
                              'CAM_BACK_LEFT', 'CAM_BACK', 'CAM_BACK_RIGHT'],
-                    'Ncams': 5,
+                    'Ncams': 6,
                 }
     trainloader, valloader = compile_data(version, dataroot, data_aug_conf=data_aug_conf,
                                           grid_conf=grid_conf, bsz=bsz, nworkers=nworkers,
                                           parser_name='segmentationdata')
 
-    device = torch.device('cpu') if gpuid < 0 else torch.device(f'cuda:{gpuid}')
+    device = torch.device('cpu') # if gpuid < 0 else torch.device(f'cuda:{gpuid}')
 
     model = compile_model(grid_conf, data_aug_conf, outC=1)
     print('loading', modelf)
@@ -135,10 +157,20 @@ def eval_model_iou(version,
     
     # Assuming you have a DataLoader object called 'dataloader'
     sample = next(iter(valloader))
+    
+    print([x.shape for x in sample])
 
+    input_shapes = [(1, 6, 3, 128, 352),  # First input
+                (1, 6, 3, 3),         # Second input
+                (1, 6, 3),            # Third input
+                (1, 6, 3, 3),         # Fourth input
+                (1, 6, 3, 3),         # Fifth input
+                (1, 6, 3)]            # Sixth input
 
-    # print(len(sample))
-    # exit()
+# Print the model summary
+    summary(model, input_data=[torch.randn(shape) for shape in input_shapes], device="cpu")
+    
+    exit()
     
     val_info = get_val_info(model, valloader, loss_fn, device)
     print(val_info)

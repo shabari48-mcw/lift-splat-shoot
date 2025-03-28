@@ -1,2 +1,2 @@
-# python main.py eval_model_iou trainval  --modelf="model.pt" --dataroot="/media/ava/Data_CI/Datasets/nuscenes-mini/"
+# python main.py eval_model_iou mini  --modelf="model.pt" --dataroot="/media/ava/Data_CI/Datasets/nuscenes-mini/"
 python main2.py eval_model_iou mini  --modelf="model.pt" --dataroot="/media/ava/Data_CI/Datasets/nuscenes-mini/"
