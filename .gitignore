@@ -127,7 +127,6 @@ dmypy.json
 # other things
 *.jpg
 *.png
-*.pt
 *.json
 runs/
 goodmodel.pt.bak
