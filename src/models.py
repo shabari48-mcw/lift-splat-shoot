@@ -83,6 +83,7 @@ class CamEncode(nn.Module):
 
     def forward(self, x):
         depth, x = self.get_depth_feat(x)
+
         return x
 
 
@@ -209,8 +210,6 @@ class LiftSplatShoot(nn.Module):
         batch_ix = torch.cat([torch.full([Nprime//B, 1], ix,
                              device=x.device, dtype=torch.long) for ix in range(B)])
         geom_feats = torch.cat((geom_feats, batch_ix), 1)
-        
-        # print("Geom Feat",geom_feats.shape) #Geom Feat torch.Size([43296, 4])
 
         # filter out points that are outside box
         kept = (geom_feats[:, 0] >= 0) & (geom_feats[:, 0] < self.nx[0])\
@@ -235,50 +234,11 @@ class LiftSplatShoot(nn.Module):
 
         # griddify (B x C x Z x X x Y)
         final = torch.zeros((B, C, self.nx[2], self.nx[0], self.nx[1]), device=x.device)
-        print(final.shape,geom_feats.shape,x.shape)
         final[geom_feats[:, 3], :, geom_feats[:, 2], geom_feats[:, 0], geom_feats[:, 1]] = x
-        
-     
-         # ...existing code...
-        # final = torch.zeros((B, C, self.nx[2], self.nx[0], self.nx[1]), device=x.device)
-        
-        # b_idx = geom_feats[:, 3]  # batch index
-        # z_idx = geom_feats[:, 2]  # depth
-        # x_idx = geom_feats[:, 0]  # width
-        # y_idx = geom_feats[:, 1]  # height
-        # # Create flattened index for the spatial dimensions
-        # spatial_index = (z_idx * self.nx[0] * self.nx[1] + 
-        #                 x_idx * self.nx[1] + 
-        #                 y_idx)
-        
-        # # Reshape x for broadcasting
-        # x = x.view(-1, C)  # [N, C]
-        
-        # # Create index tensor for scatter_add_
-        # scatter_index = spatial_index.unsqueeze(1).expand(-1, C)  # [N, C]
-        
-        # # Perform scatter_add_ operation
-        # final = final.view(B, C, -1)  # [B, C, D*H*W]
-        # for b in range(B):
-        #     batch_mask = b_idx == b
-        #     if batch_mask.any():
-        #         final[b].scatter_add_(
-        #             1,
-        #             scatter_index[batch_mask].t().contiguous(),
-        #             x[batch_mask].t().contiguous()
-        #         )
-        
-        # # Reshape back to original dimensions
-        # final = final.view(B, C, self.nx[2], self.nx[0], self.nx[1])
-        # # ...existing code...
-        
-        
-        
-        
+
+        # collapse Z
         final = torch.cat(final.unbind(dim=2), 1)
-        
-        # torch.save(final,"orgfinal.pt")
-        # exit()
+
         return final
 
     def get_voxels(self, x, rots, trans, intrins, post_rots, post_trans):
