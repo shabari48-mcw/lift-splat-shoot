@@ -3,14 +3,11 @@ Copyright (C) 2020 NVIDIA Corporation.  All rights reserved.
 Licensed under the NVIDIA Source Code License. See LICENSE at https://github.com/nv-tlabs/lift-splat-shoot.
 Authors: Jonah Philion and Sanja Fidler
 """
-
 import torch
 import onnxruntime as ort
 import matplotlib as mpl
 mpl.use('Agg')
-import matplotlib.pyplot as plt
 from PIL import Image
-import matplotlib.patches as mpatches
 import numpy as np 
 import onnx
 from tqdm import tqdm
@@ -26,19 +23,17 @@ def get_val_info(model, valloader, loss_fn, device, use_tqdm=True):
     total_loss = 0.0
     total_intersect = 0.0
     total_union = 0
+    total_mse=0
     print('running eval...')
     loader = tqdm(valloader) if use_tqdm else valloader
     with torch.no_grad():
         for batch in loader:
             allimgs, rots, trans, intrins, post_rots, post_trans, binimgs = batch
-            print([x.shape for x in batch])
             
             preds = model(allimgs.to(device), rots.to(device),
                           trans.to(device), intrins.to(device), post_rots.to(device),
                           post_trans.to(device))
-            
-            print(f"Pytorch Prediction Shape {preds.shape}") #torch.Size([4, 1, 200, 200])
-            
+        
             
             onnx_filename= "lss.onnx"
             
@@ -61,30 +56,19 @@ def get_val_info(model, valloader, loss_fn, device, use_tqdm=True):
                     )
                 print("Model successfully converted to ONNX and saved as", onnx_filename)
                 
-                model=onnx.load(onnx_filename)
-                inferred_model = onnx.shape_inference.infer_shapes(model)
-                onnx.save(inferred_model, "inferred_model.onnx")
+                exit()
                 
-                print("Model successfully converted to ONNX  and shape inferred")
             else:
                 print("ONNX Inference")
-               
-                ort_session = ort.InferenceSession("inferred_model.onnx")
+                ort_session = ort.InferenceSession(onnx_filename)
                 input_tensors = [allimgs.cpu().numpy(),rots.cpu().numpy(),trans.cpu().numpy(),intrins.cpu().numpy(),post_rots.cpu().numpy(),post_trans.cpu().numpy()]
-                print([x.shape for x in input_tensors])
                 inputs =dict(zip([x.name for x in ort_session.get_inputs()], input_tensors))
                 output_tensors = ort_session.run(None,inputs)
-                print(np.array(output_tensors).shape)
                 
-           
-            
-            t1= preds.cpu()
-            t2=torch.from_numpy(np.array(output_tensors)).cpu()
+                t1= preds.cpu()
+                t2=torch.from_numpy(np.array(output_tensors)[0]).cpu()
 
-            mse = F.mse_loss(t1, t2)
-            print(mse.item())
-                    
-            exit()
+                total_mse += F.mse_loss(t1, t2).item()
             
             binimgs = binimgs.to(device)
 
@@ -100,6 +84,7 @@ def get_val_info(model, valloader, loss_fn, device, use_tqdm=True):
     return {
             'loss': total_loss / len(valloader.dataset),
             'iou': total_intersect / total_union,
+            'mean mse': total_mse / len(valloader.dataset)
             }
 
 
@@ -144,7 +129,7 @@ def eval_model_iou(version,
                                           grid_conf=grid_conf, bsz=bsz, nworkers=nworkers,
                                           parser_name='segmentationdata')
 
-    device = torch.device('cpu') # if gpuid < 0 else torch.device(f'cuda:{gpuid}')
+    device = torch.device('cpu') if gpuid < 0 else torch.device(f'cuda:{gpuid}')
 
     model = compile_model(grid_conf, data_aug_conf, outC=1)
     print('loading', modelf)
@@ -154,23 +139,12 @@ def eval_model_iou(version,
     loss_fn = SimpleLoss(1.0).cuda(gpuid)
 
     model.eval()
-    
-    # Assuming you have a DataLoader object called 'dataloader'
-    sample = next(iter(valloader))
-    
-    print([x.shape for x in sample])
-
-    input_shapes = [(1, 6, 3, 128, 352),  # First input
-                (1, 6, 3, 3),         # Second input
-                (1, 6, 3),            # Third input
-                (1, 6, 3, 3),         # Fourth input
-                (1, 6, 3, 3),         # Fifth input
-                (1, 6, 3)]            # Sixth input
-
-# Print the model summary
-    summary(model, input_data=[torch.randn(shape) for shape in input_shapes], device="cpu")
-    
-    exit()
+        
+    #Print the Model Summary
+    # sample = next(iter(valloader))
+    # input_shapes = [x.shape for x in sample][:-1]
+    # summary(model, input_data=[torch.randn(shape) for shape in input_shapes], device="cpu")
+    # exit()
     
     val_info = get_val_info(model, valloader, loss_fn, device)
     print(val_info)

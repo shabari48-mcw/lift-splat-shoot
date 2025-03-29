@@ -243,12 +243,18 @@ def worker_rnd_init(x):
 
 def compile_data(version, dataroot, data_aug_conf, grid_conf, bsz,
                  nworkers, parser_name):
+    
+    #Shabari
     # dataroot="/media/ava/Data_CI/Datasets/nuscenes-full/nuscenes/"
-    dataroot="/media/ava/Data_CI/Datasets/nuscenes-mini/"
+    # dataroot="/media/ava/Data_CI/Datasets/nuscenes-mini/"
     nusc = NuScenes(version='v1.0-{}'.format(version),
-                    # dataroot=os.path.join(dataroot, version),
                     dataroot=dataroot,
                     verbose=False)
+    
+    #Original
+    # nusc = NuScenes(version='v1.0-{}'.format(version),
+    #                 dataroot=os.path.join(dataroot, version),
+    #                 verbose=False)
     parser = {
         'vizdata': VizData,
         'segmentationdata': SegmentationData,

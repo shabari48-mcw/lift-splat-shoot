@@ -8,8 +8,7 @@ import torch
 from torch import nn
 from efficientnet_pytorch import EfficientNet
 from torchvision.models.resnet import resnet18
-from torchvision.models.efficientnet import EfficientNet_B0_Weights
-import torchvision
+
 from .tools import gen_dx_bx, cumsum_trick, QuickCumsum
 
 #shabari
@@ -21,9 +20,11 @@ class Custom_inverse(torch.nn.Module):
         A = A.to(torch.float32) 
         n = A.shape[-1]
         B, C = A.shape[0], A.shape[1]
-        # Compute the determinant of each matrix in the batch
-        det_A = torch.det(A)
-        adj_A = torch.zeros_like(A)
+        
+        det_A = torch.det(A)  #Determinant
+        adj_A = torch.zeros_like(A)  #Adjacent
+        
+
         for i in range(n):
             for j in range(n):
                 rows = torch.cat([torch.arange(i), torch.arange(i+1, n)])
@@ -68,12 +69,12 @@ class CamEncode(nn.Module):
         self.C = C
 
         self.trunk = EfficientNet.from_pretrained("efficientnet-b0")
-        # self.trunk= torchvision.models.efficientnet_b0(weights=EfficientNet_B0_Weights)
-        self._precompute_downsample_indices()  # Precompute downsample points
+        self._precompute_downsample_indices()  #shabari
 
         self.up1 = Up(320+112, 512)
-        self.depthnet = nn.Conv2d(512, self.D + self.C, kernel_size=    1, padding=0)
-        
+        self.depthnet = nn.Conv2d(512, self.D + self.C, kernel_size=1, padding=0)
+
+    #shabari
     def _precompute_downsample_indices(self):
         """Identify blocks that reduce spatial resolution."""
         self.downsample_indices = []
@@ -87,7 +88,6 @@ class CamEncode(nn.Module):
 
     def get_depth_feat(self, x):
         x = self.get_eff_depth(x)
-        # return x,x
         # Depth
         x = self.depthnet(x)
 
@@ -95,21 +95,28 @@ class CamEncode(nn.Module):
         new_x = depth.unsqueeze(1) * x[:, self.D:(self.D + self.C)].unsqueeze(2)
 
         return depth, new_x
-    
+
     def get_eff_depth(self, x):
+        # adapted from https://github.com/lukemelas/EfficientNet-PyTorch/blob/master/efficientnet_pytorch/model.py#L231
         endpoints = dict()
+
+        # Stem
         x = self.trunk._swish(self.trunk._bn0(self.trunk._conv_stem(x)))
         prev_x = x
         reduction_count = 1  # Track reduction steps
 
-        # Iterate through blocks
+        # Blocks
         for idx, block in enumerate(self.trunk._blocks):
             drop_connect_rate = self.trunk._global_params.drop_connect_rate
             if drop_connect_rate:
-                drop_connect_rate *= float(idx) / len(self.trunk._blocks)
+                drop_connect_rate *= float(idx) / len(self.trunk._blocks) # scale drop connect_rate
             x = block(x, drop_connect_rate=drop_connect_rate)
+            
+            #Original
+            #  if prev_x.size(2) > x.size(2):
+            #     endpoints['reduction_{}'.format(len(endpoints)+1)] = prev_x
 
-            # Save previous tensor only at predefined downsample points
+            #Shabari
             if idx in self.downsample_indices:
                 endpoints[f'reduction_{reduction_count}'] = prev_x
                 reduction_count += 1
@@ -122,6 +129,7 @@ class CamEncode(nn.Module):
 
     def forward(self, x):
         depth, x = self.get_depth_feat(x)
+
         return x
 
 
@@ -185,10 +193,11 @@ class LiftSplatShoot(nn.Module):
         self.camencode = CamEncode(self.D, self.camC, self.downsample)
         self.bevencode = BevEncode(inC=self.camC, outC=outC)
 
+        #Shabari
         # toggle using QuickCumsum vs. autograd
-        self.use_quickcumsum = False
+        self.use_quickcumsum = False  # Setting to true doesn't work 
         self.inverse=Custom_inverse()
-        
+
     def create_frustum(self):
         # make grid in image plane
         ogfH, ogfW = self.data_aug_conf['final_dim']
@@ -213,21 +222,21 @@ class LiftSplatShoot(nn.Module):
         # B x N x D x H x W x 3
         points = self.frustum - post_trans.view(B, N, 1, 1, 1, 3)
        
-        # exit()
-        points = self.inverse(post_rots).view(B, N, 1, 1, 1, 3, 3).matmul(points.unsqueeze(-1))
         #shabari
+        points = self.inverse(post_rots).view(B, N, 1, 1, 1, 3, 3).matmul(points.unsqueeze(-1))
+        
        
         # cam_to_ego
         points = torch.cat((points[:, :, :, :, :, :2] * points[:, :, :, :, :, 2:3],
                             points[:, :, :, :, :, 2:3]
                             ), 5)
-        
+        #shabari
         combine = rots.matmul(self.inverse(intrins))
         
         points = combine.view(B, N, 1, 1, 1, 3, 3).matmul(points).squeeze(-1)
         points += trans.view(B, N, 1, 1, 1, 3)
-        return points
 
+        return points
 
     def get_cam_feats(self, x):
         """Return B x N x D x H/downsample x W/downsample x C
@@ -236,12 +245,11 @@ class LiftSplatShoot(nn.Module):
 
         x = x.view(B*N, C, imH, imW)
         x = self.camencode(x)
-        # return x
         x = x.view(B, N, self.camC, self.D, imH//self.downsample, imW//self.downsample)
         x = x.permute(0, 1, 3, 4, 5, 2)
 
         return x
-    
+
     def voxel_pooling(self, geom_feats, x):
         B, N, D, H, W, C = x.shape
         Nprime = B*N*D*H*W
@@ -252,11 +260,9 @@ class LiftSplatShoot(nn.Module):
         # flatten indices
         geom_feats = ((geom_feats - (self.bx - self.dx/2.)) / self.dx).long()
         geom_feats = geom_feats.view(Nprime, 3)
-        batch_ix = torch.cat([torch.full([Nprime//B,1], ix,
-                            device=x.device, dtype=torch.long) for ix in range(B)])
-        
+        batch_ix = torch.cat([torch.full([Nprime//B, 1], ix,
+                             device=x.device, dtype=torch.long) for ix in range(B)])
         geom_feats = torch.cat((geom_feats, batch_ix), 1)
-        print("Geom Feat",geom_feats.shape) #Geom Feat torch.Size([43296, 4])
 
         # filter out points that are outside box
         kept = (geom_feats[:, 0] >= 0) & (geom_feats[:, 0] < self.nx[0])\
@@ -279,11 +285,10 @@ class LiftSplatShoot(nn.Module):
         else:
             x, geom_feats = QuickCumsum.apply(x, geom_feats, ranks)
 
-        
-        final = torch.zeros((B, C, self.nx[2], self.nx[0], self.nx[1]), device=x.device) #torch.Size([1, 64, 1, 200, 200]) torch.float32
-
+        # griddify (B x C x Z x X x Y)
         final = torch.zeros((B, C, self.nx[2], self.nx[0], self.nx[1]), device=x.device)
         
+        #Shabari
         b_idx = geom_feats[:, 3]  # batch index
         z_idx = geom_feats[:, 2]  # depth
         x_idx = geom_feats[:, 0]  # width
@@ -304,29 +309,29 @@ class LiftSplatShoot(nn.Module):
         for b in range(B):
             batch_mask = b_idx == b
             if batch_mask.any():
+                final[b].to(torch.float32)
                 final[b].scatter_add_(
                     1,
-                    scatter_index[batch_mask].t().contiguous(),
-                    x[batch_mask].t().contiguous()
+                    scatter_index[batch_mask].t().contiguous().to(torch.int64),
+                    x[batch_mask].t().contiguous().to(torch.float32)
                 )
         
         # Reshape back to original dimensions
         final = final.view(B, C, self.nx[2], self.nx[0], self.nx[1])
-        # ...existing code...
 
+        #Original
+        # final[geom_feats[:, 3], :, geom_feats[:, 2], geom_feats[:, 0], geom_feats[:, 1]] = x
         
-        final = torch.cat(final.unbind(dim=2), 1)   #torch.Size([1, 64, 200, 200]) torch.float32
-        
-        # print(final.shape)
-        # torch.save(final,"modfinal.pt")
-        # exit()
+        final = torch.cat(final.unbind(dim=2), 1)
 
         return final
-        
+
     def get_voxels(self, x, rots, trans, intrins, post_rots, post_trans):
         geom = self.get_geometry(rots, trans, intrins, post_rots, post_trans)
         x = self.get_cam_feats(x)
+
         x = self.voxel_pooling(geom, x)
+
         return x
 
     def forward(self, x, rots, trans, intrins, post_rots, post_trans):
